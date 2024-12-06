@@ -20,15 +20,22 @@ After spending a fair amount of time tearing apart implants, students will work 
 
 
 
+## Contact Me
+Questions, comments? Feel free to reach out on Discord 
 
-## Getting Started 
+```
+@k111b222s333e444c555
+Remove the numbers :-)
+```
 
-- Download Obsidian: https://obsidian.md/
-- start obsidian, and open the vault `Vault` directory  
+### Bribe Me 
+Like the course and want to express your gratitude? In lieu of payment, show your appreciation by 
+- 1) hiring one of my many wonderful students
+- 2) send a student to a security conference
+- 3) give a talk
+- 4) buy us pizza  :-) 
 
 
-### Author
-@kbsec
 
 
 
