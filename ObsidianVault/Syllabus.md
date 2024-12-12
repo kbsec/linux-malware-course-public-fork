@@ -1,4 +1,4 @@
-Introduction to Malware, Threat Hunting and Offensive Capabilities Development
+Introduction to Malware and Offensive Capabilities Development
 
 # Please Read all of this carefully! 
   If you ask me a question that is clearly answered in the syllabus, I will politely ask you to RTFM (Read the Friendly Manual):) 
@@ -29,23 +29,26 @@ Entries marked as (G) are relevant only to the folks enrolled in the graduate ve
 
 
 ## Learning Outcomes 
-Like most topics related to technology, the field of offensive capabilities development is one that is rapidly evolving. The details of what you learn in this class will rapidly become stale. However, the concepts will likely have a longer shelf life, and the habits of mind are timeless!  Students who succeed in this class will be able to 
+Like most topics related to technology, the field of offensive capabilities development is one that is rapidly evolving. 
+The details of what you learn in this class will rapidly become stale. However, the concepts will likely have a longer shelf life, and the habits of mind are timeless!  Students who succeed in this class will be able to 
 - Triage malware by performing basic static and dynamic analysis 
 - extract IOCs, unpack malware, and pivot off of indicators 
 - read documentation/man pages (I promise you this is a skill)
 - program in c  (POSIX/libc )
+- debug programs using gdb
 - reverse engineer and implement first stage implants
 - build basic loaders
-- understand and implement  Process Injection 
+- understand and implement  process injection patterns on Linux 
 - Design simple Implant frameworks  
 Said differently, the goal of this class from a technical level is to demystify malware. 
 
 ### Hardware Requirements
-- A laptop with at least 8 GB of ram , and a reasonably powerful CPU.  For this class, it actually doesn't matter if it is running windows, Linux or mac os. 
+- A laptop with at least 8 GB of ram (preferably 16GB) , and a reasonably powerful CPU.  For this class, it actually doesn't matter if it is running windows, Linux or mac OS. 
 	- It simply needs to be able to run [Ghidra](https://ghidra-sre.org/)
 - It is recommended to  pick up  a raspberry pi  that supports aarch64. 
 - Below is a quick reference 
-- the final project will be run on a raspberry pi 4 8GB model. 
+- the final project will be run on a raspberry pi 4 8GB model.
+- If you plan on using ghidra on your pi, it is recommended to get a Pi5 with 8GB of RAM.
 
 | Raspberry Pi Model            | Processor                       | AArch64 Support | Notes                                                                                           |
 | ----------------------------- | ------------------------------- | --------------- | ----------------------------------------------------------------------------------------------- |
@@ -70,68 +73,70 @@ Said differently, the goal of this class from a technical level is to demystify 
 	- https://www.microcenter.com/product/676832/canakit-raspberry-pi-5-starter-kit-pro-turbine-black-(8gb) is a good option if you want an all in one .  You can get a better deal if you buy the individual parts. 
 	- otherwise, you will need a board, a case, and a compatible power supply,  and  hdmi capable 
 - Raspberry pi 3,4 will also work.  Note that if you opt for a cheaper option, you will likely want to run  a lite image without a desktop environment. 
-- If you are financially constrained, come talk to me. I can probably setup remote access to my personal supply of raspberry pis, just note that I wont always be around to reboot devices if something freezes. 
+- If you are financially constrained, come talk to me. I can probably setup remote access to my personal supply of raspberry pis, just note that I wont always be around to reboot devices if something freezes.
+- While you can run all of the course code with qemu, in my experience it is a bit unstable at times. If you have an M1+ macbook,  your emulator will can use hardware acceleration. 
 ### Tentative Topic list
-- Malware 101 
+- Malware 101
+- Computer Architecture 101
 - aarch64
 - Basic  C programming 
+- Binutils
 - basic reverse engineering 
 - libc, and POSIX
-- Basic APIs
-	- File Descriprots 
-	- Processes, threads
+- "But what *is* and operating system?"
+	- Spoiler, it is a fancy resource manager
+- Linux concepts 
+- Basic APIs to manage "resources"
+	- Processes, threads, file descriptors
+	- Files
 	- virtual memory basics 
-	- I/O
+	- File I/O
 	- Network I/O
+	- Basic IPC
 - Process Creation
 	- Elf File Format
 	- Shared objects 
 - Linking and Loading
+	- ldd/ld
 	- Static Linking
 	- Dynamic Linking
 	- Dynamic Loading
 - Static Analysis 
 - Dynamic Analysis 
 - Ghidra
-	- scripting with Ghidrathon
+	- scripting with Ghidra
 	- integration with unicorn/qiling 
 	- Debugging and triage 
+- Basic File IO
+- Redirecting IO, standard file descriptors 
 - Elf Loading 
 - Basic Socket Programming 
 - Data Exfiltration 
-- Pivoting
 - Crypto 101
 	- Ciphers
 	- MACs
 	- Asymmetric Cryptography 
 - Ransomware
-- Stealers 
 - C2 Engineering 
 - C2 Channels 
-- PE loaders 
 - Injection
-	- DLL injection
-	- Process Injection
-	- Reflective DLL injection 
-	- More advanced Process injection
+	- Fork and Run
+	- Ptrace Injection
+	- SO injection
+	- Reflective SO injection 
 - Packers, builders and AV Evasion 
 - Unpacking Malware 
 - Hooking
 	- Officially supported methods 
-	- IAT hooking 
+	- PLT hooking 
 	- Trampoline Hooking 
-	- Exception Based hooking 
-	- Detours library
 - Implant design
 	- Modularity
 	- RPC 
 	- Use of Cryptography 
 	- Backend Engineering (Pub Sub, pattern)
 - Basic MVC design patterns with Flask, SQLAlchemy and Mysql 
-- Selected Advanced topics may include
-	- Exotic Executable file Formats (COFF, BOF, and other)
-	- EDR Evasion  
-	- Memory evasion 
+- Selected Advanced topics 
 ## PreReqs:
 
 ### Tools:
@@ -158,7 +163,7 @@ Said differently, the goal of this class from a technical level is to demystify 
 
 ## Courses/topics:
 - Combinatorics: you should be comfortable with basic counting: i.e. if I ask you how many bit strings of length $n$ are there, you should instinctively know the answer is  $2^n$ and how to prove it.
-- Computing systems: as mentioned in the programming section, it is essential to ahve familiarity with memory management, c programming, reading assembly, using debuggers and compiler toolchains. You should know the difference between stack and heap memory.
+- Computing systems: as mentioned in the programming section, it is essential to have familiarity with memory management, c programming, reading assembly, using debuggers and compiler toolchains. You should know the difference between stack and heap memory.
 	- But even more than that, you should understand what Virtual Memory **really is**.
 	- Having familiarity with POSIX apis, and programming on  Linux is not strictly speaking required but is a plus
 - Basic Cryptography: familiarity with Ciphers, MACs and Hash functions. 
@@ -168,51 +173,49 @@ Said differently, the goal of this class from a technical level is to demystify 
 
 ## Grading and course policies:
 
-Subject to change: this usually works out in your favor and I reserve the right to weigh different components for different students. How is this fair you ask? It is not :)  but again, this usually works in your favor.  For example, bombed the homework but crushed final project? No problem. 
+Subject to change: I reserve the right to weigh different components for different students. How is this fair you ask? It is not :)  but , this usually works in your favor.  For example, bombed the homework but crushed final project? No problem. struggled with programming but reversed all of the samples completely? No problem. 
+This course is designed to introduce students to a very interesting and challenging field. It is designed to be very challenging , where you get out what you put in. That said, it is **not** a weed out course.  
 
-There is a curve for this class, but it will **never** hurt your grade. I only curve up. The average for the Undergrad course is generally B/B+ and I expect the average for the grade version to be an A-. 
+There is a curve for this class, but it will **never** hurt your grade. I only curve up. The average for the Undergrad course is generally B/B+ and I expect the average for the gradudate version to be an A-. 
 
 As a general comment, it is difficult to fail the course, common to get the average, and very had to get an A.
 
-- Malware Write up: 10%  
-- Exercises: 5%
-- Capture the Flag (CTF): 10%
-- Reverse Engineering Assignments: 15% 
-- Coding Assignments: 10%
-- Capstone Project: 50%  - 100%
+- Exercise: 10%
+- Reverse Engineering Challenges: 15% 
+- Post Exploitation challenges: 15% 
+- Programming Assignments 10%
+- Final Project (Capstone): 50%
 - (G) Paper/Project 0-100%
-	- Grad students have the  option to submit a paper in lieu of a capstone. Of course, you are expected to submit **some** code but it doesn't need to be as operational as the undergraduates. it does, however, need to highlight a novel or cutting edge technique of some kind. You get to choose how much of your grade is determined by the paper, including  if you want to just do the capstone!  
+	- Grad students have the  option to submit a paper in lieu of a capstone. Of course, you are expected to submit **some** code but it doesn't need to be as operational as the undergraduates. It does, however, need to highlight a novel or cutting edge technique of some kind. You get to choose how much of your grade is determined by the paper. You also have the choice of  doing capstone!  
 Bonus Points:
 - Class Participation: 2.5% -10%
 - Guest lecture attendance  2.5%-10%
-- Vibes 0-50% 
-	- This does not mean you get points for nothing. If you knock my socks off for the final project, I will likely not even bother calculating your grade, and just give you an A. I might even help you find a job.
+- Memes: 2.5% 
+	- Bonus points will be given for creative and funny memes relevant to the course material. 
+- Discretionary Points 0-50% 
+	- This does not mean you get points for nothing. If you knock my socks off for the final project, I will likely not even bother calculating your grade, and just give you an A.
 	- That said, I can be difficult to impress. Do not stake your final grade on the final project. It has worked our roughly 50% of the time. 
-- To be clear, bonus points do not affect **other** students' grade. 
+- Bonus points do not affect **other** students' grade. 
 #### Description of Graded work
 #### Exercises 
 
 Exercises are weekly, quick turn around homework, and in class assignments. They are designed to be sanity checks for topics as the course progresses. They are questions that should take between 5 and 10 minutes. Questions will always be based on recent material, but topics build on each other. You should bring your laptop to class in case there is an exercise.  
 Example exercise that I almost always give out: 
-- given an executable with stripped symbols, find the Virtual Address (VA) of the  main function assuming the exe is mapped to its preferred Virtual Address 
+- given an executable with stripped symbols, find the Virtual Address (VA) of the  main function assuming the executable is mapped to its preferred Virtual Address 
 - explain the difference between static and dynamic linking 
-- What does this function do? (usually something simple like strcpy or memcpy)
-- 
+- What does this assembly function do? (usually something simple like strcpy or memcpy)
+ 
 
-### Malware Reverse Engineering
+### Reverse Engineering
 
-Each assignment consists of a new epoch of malware sent to students highlighting a new technique to analyze. It will be their job to reverse engineer the new implant, detail its functionality, and identify attacker infrastructure and IOCs. These assignments will often be multi staged and difficult. It is easy to spend hours reverse engineering a binary if you're not careful with your time. Often times, malware will be multi staged. What this means is just because you found the first implant, doesn't mean you are even close to being done. How do you know when you have found all of the implants? You don't! This is designed to emulate a real world hunting environment. Usually though, there won't be more then 3-10 stages, and only marginal completion is required to pass the assignment.
+Each assignment consists of a new epoch of malware sent to students highlighting a new technique to analyze. It will be their job to reverse engineer the new implant, detail its functionality, and identify attacker infrastructure and IOCs. These assignments will often be multi staged and difficult. It is easy to spend hours reverse engineering a binary if you're not careful with your time. 
+When I say "multi staged", means just because you found the first implant, doesn't mean you are even close to being done. How do you know when you have found all of the implants? You don't! This is designed to emulate a real world hunting environment. Usually though, there won't be more then 3-10 stages, and only marginal completion is required to pass the assignment.
 - i.e.  last semester, getting past the first two stages was a pass
-### Coding/Malware Development  
+### Programming Assignments  
 
-- On the offensive side, students will work to recreate capabilities observed within new epochs of malware that can be integrated into their own Command and Control (C2) framework.  For more on this, see Capstone. 
-- To help bridge the gap between the capstone and assignments, there will also be periodic Post Exploitation Challenges (PECs). These challenges look and feel like simple CTFs, but isntead of the point of the challeng being to exploit the system the exploit is obvious! It is your job to write a suitable post exploitation capability to  find the  flag on the system even when conditions are less than ideal . 
+ On the offensive side, students will work to recreate capabilities observed within new epochs of malware that can be integrated into their own Command and Control (C2) framework.  For more on this, see Capstone. 
+- To help bridge the gap between the capstone and assignments, there will also be periodic Post Exploitation Challenges (PECs). These challenges look and feel like simple CTFs. The key difference is rather than spending all of your time writing an exploit, the exploit is easy! The difficult part will be writing the payload. I.e. it will rarely be as simple as reading  `/flag`. It is your job to write a suitable post exploitation capability to  find the  flag on the system even when conditions are less than ideal.   
 
-
-
-### Capture the Flag (CTF)
-
-The course will have a semester-long capture the flag competition where students will compete to solve challenges that are often times hidden in epochs of malware.
 
 ### Capstone
 
@@ -224,29 +227,45 @@ This class will guide students through the creation of their own production read
 ### Attendance
 
 Attendance is mandatory, but I do not take attendance. instead, I will non-deterministically give an exercise at the start of class that you have 5-10 minutes to complete.  If you need to miss a class, do give course staff a heads up. I am very reasonable so long as there is clear communication. 
+## Hacking without permission 
+Automatic F, and I will report you.  
+
+
+### Course network
+In order to participate in the post exploitation task. students will need to connect to
+the class VPN. This will allow you to access Post Exploitation Challenges.  This network is monitored. If I catch you deviating from the scope of the assignment, I will ban you from the network, and will not add you back.  
+If you lose your VPN credentials, I will re provision them at my earliest convenience. But, this could take some time. So, try not to lose your credentials :). Take backups. 
+
+# Using your phone during class
+Please don't?
+
+### Eating During Class
+The lecture takes place during dinner. There will be a break to allow students to eat halfway through each lecture.  If you have a food allergy, please let me know ASAP!  Until the class list is stabilized, do not bring foods containing peanuts, sesame, tree nuts ...etc. 
+You are welcome to order food to class! You are also welcome to eat during class so long as it is not distracting to other folks. I.e. Maybe don't eat microwaved tuna :). 
 
 ### Late Policy
 - You are allocated 3 late days for the semester, and may use them at your discretion.
 - You may ask for more late days for extenuating circumstances. I am usually pretty reasonable when it comes to providing extensions-- but the time to do it is not the night before a deadline.
 - Late days may only be used on reverse engineering assignments, or coding assignments.
 - There are no late days for the capstone project or exercises.
-- I do not accept submissions for exercises if you are remote.
-- 
+- I do not accept submissions for exercises if you are remote without a prior agreement.
 
 #### Remarks about Mental Health
 - I give incompletes to students who have extenuating circumstances: usually medical emergencies.
 - Mental health emergencies are medical emergencies. 
 - There will be some sections that discuss material that may be triggering to some.
 - Warnings will be given at the start of such lectures, and attendance is completely optional.
-- If you say the words “I am having a mental health emergency and need an incomplete” you will get one, zero questions asked.
+- If you say the words “I am having a medical emergency and need an incomplete” you will get one, zero questions asked.
+	- Again, mental health emergencies are medical emergencies
 	- Note that an incomplete  gives you  extra time (usually up to 90 days) to complete course work. 
 
-### References:
 
-There are no mandatory textbooks for this course. Required readings will consist of documentation, blog posts, or source code. Below are several references that will be relevant to various homework assignments
+### References:
+(This will be updated)
+There are no mandatory textbooks for this course. Required readings will consist of documentation, blog posts, or source code. Below are several references that will be useful to folks taking this course
+- https://azeria-labs.com/
 - https://pages.cs.wisc.edu/~remzi/OSTEP/
 - https://linuxjourney.com/lesson/linux-history
-
 
   
   
